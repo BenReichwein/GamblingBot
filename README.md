@@ -11,6 +11,7 @@ Brain Buster discord bot
 - Gamble coins
 - Gain / Gamble coins with trivia
 - Invest money (use stocks api)
+- Change prefix
 
 ## Required
 
