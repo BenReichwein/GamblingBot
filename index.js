@@ -1,7 +1,7 @@
 // GLOBAL
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const token = "NzEzNjI0MzcxNzE2OTQ3OTg4.Xsi0fA.PAGZyVtnr0lSNRQHZtqzUkcAalM";
+const token = "TOKEN";
 const fs = require('fs');
 let userData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
 const prefix = '-';
