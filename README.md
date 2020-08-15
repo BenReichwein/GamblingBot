@@ -1,6 +1,6 @@
 # Brain Buster Bot
 
-Brain Buster discord bot
+[Invite Bot](https://discord.com/api/oauth2/authorize?client_id=713624371716947988&permissions=8&scope=bot)
 
 ## Features
 
