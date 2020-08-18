@@ -108,6 +108,18 @@ bot.on('message', message => {
             message.channel.send(balance);
             break;
             
+            // PREFIX CHANGE
+
+        case `${prefix}prefix`:
+            prefix = args[1];
+            const changep = new Discord.MessageEmbed()
+                .setTitle('PREFIX UPDATE!')
+                .setColor('#FF7F50')
+                .setDescription('New Prefix: `'+ prefix +'`')
+
+            message.channel.send(changep);
+            break;
+            
             // COIN FLIP
             
         case `${prefix}cf`:case `${prefix}coinflip`:
