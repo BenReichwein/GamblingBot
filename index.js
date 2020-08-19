@@ -38,9 +38,9 @@ bot.on('message', message => {
 
         case `${prefix}help`:
             const help = new Discord.MessageEmbed()
-                .setTitle('HELP')
+                .setTitle('LIST OF COMMANDS')
                 .setColor('#FF7F50')
-                .setDescription('**Command:** `'+prefix+'Trivia`\nBrain Buster Trivia\n**Command:** `'+prefix+'Website`\nDownload Brain Buster App here')
+                .setDescription('**Command:** `'+prefix+'Website`\nBrain Buster Website\n**Command:** `'+prefix+'Stats`\nSee your user stats\n**Command:** `'+prefix+'Daily`\nGet your daily reward\n**Command:** `'+prefix+'Balance`\nCheck how many coins you have\n**Command:** `'+prefix+'Prefix`\nChange the prefix of the bot\n**Command:** `'+prefix+'Coinflip`\nCoin Flip Gambling')
 
             message.channel.send(help);
             break;
