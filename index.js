@@ -4,7 +4,7 @@ const bot = new Discord.Client();
 const token = "TOKEN";
 const fs = require('fs');
 let userData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
-let guildData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+let prefix = "-";
 let dailytime = true;
 
 // LOGGING IN
@@ -17,25 +17,16 @@ bot.once('ready', () => {
 // COMMANDS
 bot.on('message', message => {
     let sender = message.author;
-    let server = message.guild;
     // USER DATA - To Json
     if (!userData[sender.id]) userData[sender.id] = {
         messagesSent: 0,
         coins: 0
     }
-    // GUILD DATA - To Json
-    if (!guildData[server.id]) guildData[server.id] = {
-        messagesSent: 0,
-        prefix: '-'
-    }
-    let prefix = guildData[server.id].prefix;
     // Adds message and coin for each message sent
     userData[sender.id].messagesSent++;
     userData[sender.id].coins++;
-    guildData[server.id].messagesSent++;
 
     Save(); // Saves data to json
-    SaveG(); // Saves Guild data to json
 
     // ARGUMENTS
     let args = message.content.substring(prefix).split(" ");
@@ -67,24 +58,13 @@ bot.on('message', message => {
 
             // USER STATS
 
-        case `${prefix}userstats`:
-            const userstats = new Discord.MessageEmbed()
+        case `${prefix}stats`:
+            const stats = new Discord.MessageEmbed()
                 .setTitle('USER STATS')
                 .setColor('#FF7F50')
                 .setDescription('Coins: `$'+ userData[sender.id].coins +'` \nMessages Sent: `'+ userData[sender.id].messagesSent +'`')
 
-            message.channel.send(userstats);
-            break;
-
-            // GUILD STATS
-
-        case `${prefix}guildstats`:
-            const guildstats = new Discord.MessageEmbed()
-                .setTitle('GUILD STATS')
-                .setColor('#FF7F50')
-                .setDescription('Prefix: `'+ guildData[server.id].prefix +'` \nMessages Sent: `'+ guildData[server.id].messagesSent +'`')
-
-            message.channel.send(guildstats);
+            message.channel.send(stats);
             break;
 
             // DAILY REWARD
@@ -128,8 +108,6 @@ bot.on('message', message => {
 
         case `${prefix}prefix`:
             prefix = args[1];
-            guildData[server.id].prefix = prefix;
-            SaveG();
             const changep = new Discord.MessageEmbed()
                 .setTitle('PREFIX UPDATE!')
                 .setColor('#FF7F50')
@@ -165,14 +143,17 @@ bot.on('message', message => {
             } else if(args[1] >= 50) {
                 let flip = Math.floor(Math.random() * 2) + 1
                 if (flip === 1) {
+                    userData[sender.id].coins -= args[1];
+                    userData[sender.id].coins += args[1]*2;
+                    Save();
                     const cfwin = new Discord.MessageEmbed()
                         .setTitle('COIN FLIP')
                         .setColor('#7FFF00')
-                        .setDescription('***50/50*** **Chance**\n\nYou won: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+                        .setDescription('***50/50*** **Chance**\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
 
                     message.channel.send(cfwin);
                 } else {
-                    userData[sender.id].coins-=args[1];
+                    userData[sender.id].coins -= args[1];
                     Save();
                     const cflose = new Discord.MessageEmbed()
                         .setTitle('COIN FLIP')
@@ -188,11 +169,6 @@ bot.on('message', message => {
 
 function Save() {
     fs.writeFile('data.json', JSON.stringify(userData), (err) => {
-        if (err) console.error(err);
-    })
-}
-function SaveG() {
-    fs.writeFile('data.json', JSON.stringify(guildData), (err) => {
         if (err) console.error(err);
     })
 }
