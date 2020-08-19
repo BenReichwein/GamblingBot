@@ -18,7 +18,6 @@ bot.once('ready', () => {
 bot.on('message', message => {
     let sender = message.author;
     let server = message.guild;
-    let prefix = guildData[server.id].prefix;
     // USER DATA - To Json
     if (!userData[sender.id]) userData[sender.id] = {
         messagesSent: 0,
@@ -29,6 +28,7 @@ bot.on('message', message => {
         messagesSent: 0,
         prefix: '-'
     }
+    let prefix = guildData[server.id].prefix;
     // Adds message and coin for each message sent
     userData[sender.id].messagesSent++;
     userData[sender.id].coins++;
