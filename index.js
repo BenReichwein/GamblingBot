@@ -38,13 +38,13 @@ bot.on('message', message => {
     // 1 Word Commands - args[0]
     switch(args[0]) {
 
-        // HELP
+            // HELP
 
         case `${prefix}help`:
             const help = new Discord.MessageEmbed()
                 .setTitle('LIST OF COMMANDS')
                 .setColor('#FF7F50')
-                .setDescription('**Command:** `'+prefix+'Website`\nBrain Buster Website\n**Command:** `'+prefix+'Stats`\nSee your user stats\n**Command:** `'+prefix+'Daily`\nGet your daily reward\n**Command:** `'+prefix+'Balance`\nCheck how many coins you have\n**Command:** `'+prefix+'Prefix`\nChange the prefix of the bot\n**Command:** `'+prefix+'Coinflip`\nCoin Flip Gambling')
+                .setDescription('**Command:** `'+prefix+'Website`\nBrain Buster Website\n**Command:** `'+prefix+'Stats`\nSee your user stats\n**Command:** `'+prefix+'Daily`\nGet your daily reward\n**Command:** `'+prefix+'Balance`\nCheck how many coins you have\n**Command:** `'+prefix+'Prefix`\nChange the prefix of the bot\n**Command:** `'+prefix+'Coinflip`\n2x Gambling\n**Command:** `'+prefix+'Slot`\n3x Gambling')
 
             message.channel.send(help);
             break;
@@ -184,22 +184,71 @@ bot.on('message', message => {
                     userData[sender.id].coins += args[1]*2;
                     Save();
                     const cfwin = new Discord.MessageEmbed()
-                        .setTitle('COIN FLIP')
+                        .setTitle('COIN FLIP (2x)')
                         .setColor('#7FFF00')
-                        .setDescription('***50/50*** **Chance**\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+                        .setDescription('**⚪️ ️| ⚪️**\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
 
                     message.channel.send(cfwin);
                 } else {
                     userData[sender.id].coins -= args[1];
                     Save();
                     const cflose = new Discord.MessageEmbed()
-                        .setTitle('COIN FLIP')
+                        .setTitle('COIN FLIP (2x)')
                         .setColor('#FF4500')
-                        .setDescription('***50/50*** **Chance**\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+                        .setDescription('**🔴️ | 🔴️**\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
 
                     message.channel.send(cflose);
                 }
             }
+            break;
+
+            // SLOT GAMBLE
+
+        case `${prefix}slot`:
+            if (args[1] < 50) {
+            const sloterr = new Discord.MessageEmbed()
+                .setTitle(`BET TOO LOW`)
+                .setColor('#FF4500')
+                .setDescription('Bet must be more than $50')
+
+            message.channel.send(sloterr);
+        } else if(!args[1]) {
+            const sloterr1 = new Discord.MessageEmbed()
+                .setTitle(`ERROR`)
+                .setColor('#FF4500')
+                .setDescription('Give an amount to bet')
+
+            message.channel.send(sloterr1);
+        } else if(args[1] > userData[sender.id].coins) {
+            const sloterr2 = new Discord.MessageEmbed()
+                .setTitle(`INSUFFICIENT FUNDS`)
+                .setColor('#FF4500')
+                .setDescription('You do not have `$' + args[1] + '`')
+
+            message.channel.send(sloterr2);
+        } else if(args[1] >= 50) {
+            let flip = Math.floor(Math.random() * 3) + 1
+            if (flip === 1) {
+                userData[sender.id].coins -= args[1];
+                userData[sender.id].coins += args[1]*3;
+                Save();
+                const slotwin = new Discord.MessageEmbed()
+                    .setTitle('SLOT (3x)')
+                    .setColor('#7FFF00')
+                    .setDescription('🍉|🥝|🥕\n🍒|🍒|🍒\n🥝|🥕|🥝\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+
+                message.channel.send(slotwin);
+            } else if (flip >= 2) {
+                userData[sender.id].coins -= args[1];
+                Save();
+                const slotlose = new Discord.MessageEmbed()
+                    .setTitle('SLOT (3x)')
+                    .setColor('#FF4500')
+                    .setDescription('🍉|🥝|🥕\n🍒|🍒|🍌\n🥝|🥕|🥝\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+
+                message.channel.send(slotlose);
+            }
+        }
             break;
     }
 });
