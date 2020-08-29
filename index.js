@@ -20,9 +20,13 @@ bot.on('message', message => {
     // USER DATA - To Json
     if (!userData[sender.id]) userData[sender.id] = {
         messagesSent: 0,
-        coins: 0
+        coins: 0,
+        multiplier: 1
     }
     // Adds message and coin for each message sent
+    if (userData[sender.id].multiplier === 2) {
+        userData[sender.id].coins++;
+    }
     userData[sender.id].messagesSent++;
     userData[sender.id].coins++;
 
@@ -62,7 +66,7 @@ bot.on('message', message => {
             const stats = new Discord.MessageEmbed()
                 .setTitle('USER STATS')
                 .setColor('#FF7F50')
-                .setDescription('Coins: `$'+ userData[sender.id].coins +'` \nMessages Sent: `'+ userData[sender.id].messagesSent +'`')
+                .setDescription('Coins: `$'+ userData[sender.id].coins +'` \nMessages Sent: `'+ userData[sender.id].messagesSent +'`\nMultiplier: `'+ userData[sender.id].multiplier +'x`')
 
             message.channel.send(stats);
             break;
@@ -97,7 +101,7 @@ bot.on('message', message => {
 
         case `${prefix}balance`:case `${prefix}bal`:case `${prefix}coins`:
             const balance = new Discord.MessageEmbed()
-                .setTitle('BALANCE')
+                .setTitle(`${sender.username}'s BALANCE`)
                 .setColor('#FF7F50')
                 .setDescription('Coins: `$'+ userData[sender.id].coins +'`')
 
@@ -114,6 +118,39 @@ bot.on('message', message => {
                 .setDescription('New Prefix: `'+ prefix +'`')
 
             message.channel.send(changep);
+            break;
+
+            // MULTIPLIERS
+
+        case `${prefix}multiply`:
+            if (args[1] === '2x') {
+                if (userData[sender.id].coins >= 2000) {
+                    userData[sender.id].coins -= 2000;
+                    userData[sender.id].multiplier = 2;
+                    Save();
+                    const x2 = new Discord.MessageEmbed()
+                        .setTitle('PURCHASED (-2000)')
+                        .setColor('#7FFF00')
+                        .setDescription(`**${sender.username}** has purchased ***2x*** multiplier`)
+
+                    message.channel.send(x2);
+                } else {
+                        const x2err = new Discord.MessageEmbed()
+                            .setTitle('INSUFFICIENT FUNDS')
+                            .setColor('#FF4500')
+                            .setDescription('You need `$2000` for the ***2x*** multiplier')
+
+                        message.channel.send(x2err);
+                }
+            } else {
+                const multipliers = new Discord.MessageEmbed()
+                    .setTitle('MULTIPLIERS')
+                    .setColor('#FF7F50')
+                    .setDescription('Multiplies coins from messages\n\n***2x*** - `$2000`')
+                    .setFooter(`Do "${prefix}multiply 2x" to purchase`)
+
+                message.channel.send(multipliers);
+            }
             break;
 
             // COIN FLIP
