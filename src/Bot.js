@@ -50,7 +50,7 @@ class Bot {
             // HELP
 
             case `${prefix}help`:
-                await createEmbed(`LIST OF COMMANDS`, '#FF7F50', '**Command:** `' + prefix + 'Website`\nBrain Buster Website\n**Command:** `' + prefix + 'Stats`\nSee your user stats\n**Command:** `' + prefix + 'Daily`\nGet your daily reward\n**Command:** `' + prefix + 'Balance`\nCheck how many coins you have\n**Command:** `' + prefix + 'Prefix`\nChange the prefix of the bot\n**Command:** `' + prefix + 'Coinflip`\n2x Gambling\n**Command:** `' + prefix + 'Slot`\n3x Gambling');
+                await createEmbed(`LIST OF COMMANDS`, '#FF7F50', '**Command:** `' + prefix + 'Website`\nBrain Buster Website\n**Command:** `' + prefix + 'Stats`\nSee your user stats\n**Command:** `' + prefix + 'Daily`\nGet your daily reward\n**Command:** `' + prefix + 'Balance`\nCheck how many coins you have\n**Command:** `' + prefix + 'Multiply`\nGet more coins from sending messages\n**Command:** `' + prefix + 'Dice`\n1x-100x Gambling\n**Command:** `' + prefix + 'Coinflip`\n2x Gambling\n**Command:** `' + prefix + 'Slot`\n3x Gambling');
                 break;
 
             // WEBSITE
@@ -121,7 +121,7 @@ class Bot {
                 if (args[1] < 50) {
                     await createEmbed(`BET TOO LOW`, '#FF4500', 'Bet must be more than $50');
                 } else if(!args[1]) {
-                    await createEmbed(`ERROR`, '#FF4500', 'Give an amount to bet');
+                    await createEmbed(`ERROR`, '#FF4500', 'Usage: `'+prefix+'cf [amount]`');
                 } else if(args[1] > userData[sender.id].coins) {
                     await createEmbed(`INSUFFICIENT FUNDS`, '#FF4500', 'You do not have `$' + args[1] + '`');
                 } else if(args[1] >= 50) {
@@ -145,7 +145,7 @@ class Bot {
                 if (args[1] < 50) {
                     await createEmbed(`BET TOO LOW`, '#FF4500', 'Bet must be more than $50');
                 } else if(!args[1]) {
-                    await createEmbed(`ERROR`, '#FF4500', 'Give an amount to bet');
+                    await createEmbed(`ERROR`, '#FF4500', 'Usage: `'+prefix+'slot [amount]`');
                 } else if(args[1] > userData[sender.id].coins) {
                     await createEmbed(`INSUFFICIENT FUNDS`, '#FF4500', 'You do not have `$' + args[1] + '`');
                 } else if(args[1] >= 50) {
@@ -159,6 +159,33 @@ class Bot {
                         userData[sender.id].coins -= args[1];
                         Save();
                         await createEmbed('SLOT (3x)', '#FF4500', '🍉|🥝|🥕\n🍒|🍒|🍌\n🥝|🥕|🥝\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                    }
+                }
+                break;
+
+            // DICE GAMBLE
+
+            case `${prefix}dice`:
+                let flip = 1;
+                if (args[1] >= 1) {
+                    flip = Math.floor(Math.random() * args[1]) + 1
+                }
+                if (args[2] < 50) {
+                    await createEmbed(`BET TOO LOW`, '#FF4500', 'Bet must be more than $50');
+                } else if(!args[2]) {
+                    await createEmbed(`ERROR`, '#FF4500', 'Usage: `'+prefix+'dice [multiplier (1+)] [amount]`');
+                } else if(args[2] > userData[sender.id].coins) {
+                    await createEmbed(`INSUFFICIENT FUNDS`, '#FF4500', 'You do not have `$' + args[2] + '`');
+                } else if(args[2] >= 50) {
+                    if (flip === 1) {
+                        userData[sender.id].coins -= args[2];
+                        userData[sender.id].coins += args[2]*args[1];
+                        Save();
+                        await createEmbed(`DICE (${args[1]}x)`, '#7FFF00', '🎲🎲🎲\n🎲🎲🎲\n🎲🎲🎲\n\nYou won: `$' + args[2]*args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                    } else if (flip >= 2) {
+                        userData[sender.id].coins -= args[2];
+                        Save();
+                        await createEmbed(`DICE (${args[1]}x)`, '#FF4500', '🎲🎲🔴\n🎲🔴🎲\n🔴🔴🎲\n\nYou lost: `$' + args[2] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
                     }
                 }
                 break;
