@@ -1,7 +1,7 @@
 // GLOBAL
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const token = "TOKEN";
+const token = process.env.TOKEN;
 const Bot = module.exports = new (require("./src/Bot").Bot)(bot);
 
 // LOGGING IN
