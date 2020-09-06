@@ -2,8 +2,6 @@ const Discord = require('discord.js');
 const fs = require('fs');
 let userData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
 let prefix = '-';
-let dailytime = true;
-let hourlytime = true;
 
 class Gambling {
 
@@ -25,7 +23,9 @@ class Gambling {
         if (!userData[sender.id]) userData[sender.id] = {
             messagesSent: 0,
             coins: 0,
-            multiplier: 1
+            multiplier: 1,
+            daily: true,
+            hourly: true
         }
         // Adds message and coin for each message sent
         if (userData[sender.id].multiplier === 2) {
@@ -51,14 +51,14 @@ class Gambling {
             // DAILY REWARD
 
             case `${prefix}daily`:
-                if (dailytime === true) {
+                if (userData[sender.id].daily === true) {
                     // Gives you 50-100 coins and writes it to the json file
                     let dailyreward = Math.floor(Math.random() * 50) + 100;
                     userData[sender.id].coins+=dailyreward;
                     Save();
                     await createEmbed(`DAILY`, '#FF7F50', 'You were awarded with `$'+ dailyreward +'`\n**Balance**: `$'+ userData[sender.id].coins +'`');
-                    dailytime = false;
-                    sleep(86400000).then(r => dailytime = true);
+                    userData[sender.id].daily = false;
+                    sleep(86400000).then(r => userData[sender.id].daily = true);
                 } else {
                     await createEmbed('SLOW DOWN THERE', '#FF4500', 'Daily reward available **TOMORROW!**');
                 }
@@ -67,14 +67,14 @@ class Gambling {
             // HOURLY REWARD
 
             case `${prefix}hourly`:
-                if (hourlytime === true) {
+                if (userData[sender.id].hourly === true) {
                     // Gives you 50-100 coins and writes it to the json file
                     let hourlyreward = Math.floor(Math.random() * 50) + 20;
                     userData[sender.id].coins+=hourlyreward;
                     Save();
                     await createEmbed(`HOURLY`, '#FF7F50', 'You were awarded with `$'+ hourlyreward +'`\n**Balance**: `$'+ userData[sender.id].coins +'`');
-                    hourlytime = false;
-                    sleep(3600000).then(r => hourlytime = true);
+                    userData[sender.id].hourly = false;
+                    sleep(3600000).then(r => userData[sender.id].hourly = true);
                 } else {
                     await createEmbed('SLOW DOWN THERE', '#FF4500', 'Hourly reward available in **1 HOUR**');
                 }
