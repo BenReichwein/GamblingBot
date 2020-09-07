@@ -124,11 +124,24 @@ class Gambling {
                         userData[sender.id].coins -= args[1];
                         userData[sender.id].coins += args[1]*2;
                         Save();
-                        await createEmbed('COIN FLIP (2x)', '#7FFF00', '**⚪️ ️| ⚪️**\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                        const cfwin = new Discord.MessageEmbed()
+                            .setTitle('COIN FLIP (2x)')
+                            .setColor('#7FFF00')
+                            .setDescription('\n\nYou won: `$' + args[1]*2 + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+                            .setThumbnail('https://random-ize.com/coin-flip/canada-25-cent/canada-25-cent-front.png')
+
+                        await message.channel.send(cfwin);
                     } else {
                         userData[sender.id].coins -= args[1];
                         Save();
-                        await createEmbed('COIN FLIP (2x)', '#FF4500', '**🔴️ | 🔴️**\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                        const cflose = new Discord.MessageEmbed()
+                            .setTitle('COIN FLIP (2x)')
+                            .setColor('#FF4500')
+                            .setDescription('\n\nYou lost: `$' + args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`')
+                            .setThumbnail('https://random-ize.com/coin-flip/canada-25-cent/canada-25-cent-back.png')
+
+                        await message.channel.send(cflose);
+                        break;
                     }
                 }
                 break;
