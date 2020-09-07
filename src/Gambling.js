@@ -22,7 +22,7 @@ class Gambling {
         // USER DATA - To Json
         if (!userData[sender.id]) userData[sender.id] = {
             messagesSent: 0,
-            coins: 0,
+            coins: 200,
             multiplier: 1,
             daily: true,
             hourly: true
