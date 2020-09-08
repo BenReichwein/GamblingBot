@@ -38,9 +38,9 @@ class Bot {
                     + prefix + 'Daily`\nGet your daily reward\n**Command:** `'
                     + prefix + 'Balance`\nCheck how many coins you have\n**Command:** `'
                     + prefix + 'Multiply`\nGet more coins from sending messages\n**Command:** `'
-                    + prefix + 'Dice`\n1x-100x Gambling\n**Command:** `'
-                    + prefix + 'Coinflip`\n2x Gambling\n**Command:** `'
-                    + prefix + 'Slot`\n3x Gambling');
+                    + prefix + 'Dice [multiplier] [amount]`\n1x-100x Gambling\n**Command:** `'
+                    + prefix + 'Coinflip [amount]`\n2x Gambling\n**Command:** `'
+                    + prefix + 'Slot [amount]`\n3x Gambling');
                 break;
 
             // WEBSITE
