@@ -83,7 +83,13 @@ class Gambling {
             // BALANCE
 
             case `${prefix}balance`:case `${prefix}bal`:case `${prefix}coins`:
-                await createEmbed(`${sender.username}'s BALANCE`, '#FF7F50', 'Coins: `$'+ userData[sender.id].coins +'`');
+                if (args[1] === 'reset') {
+                    userData[sender.id].coins = 200;
+                    Save();
+                    await createEmbed(`${sender.username}'s BALANCE RESET`, '#FF7F50', 'New Balance: `$'+ userData[sender.id].coins +'`')
+                } else {
+                    await createEmbed(`${sender.username}'s BALANCE`, '#FF7F50', 'Coins: `$'+ userData[sender.id].coins +'`');
+                }
                 break;
 
             // MULTIPLIERS
@@ -174,25 +180,26 @@ class Gambling {
 
             case `${prefix}dice`:
                 let flip = 1;
-                if (args[1] >= 1) {
-                    flip = Math.floor(Math.random() * args[1]) + 1
+                let multiplier = args[1].split('+' && 'x')
+                if (multiplier >= 1) {
+                    flip = Math.floor(Math.random() * multiplier) + 1
                 }
                 if (args[2] < 50) {
                     await createEmbed(`BET TOO LOW`, '#FF4500', 'Bet must be more than $50');
                 } else if(!args[2]) {
-                    await createEmbed(`ERROR`, '#FF4500', 'Usage: `'+prefix+'dice [multiplier (1+)] [amount]`');
+                    await createEmbed(`ERROR`, '#FF4500', 'Usage: `'+prefix+'dice [multiplier] [amount]`');
                 } else if(args[2] > userData[sender.id].coins) {
                     await createEmbed(`INSUFFICIENT FUNDS`, '#FF4500', 'You do not have `$' + args[2] + '`');
                 } else if(args[2] >= 50) {
                     if (flip === 1) {
                         userData[sender.id].coins -= args[2];
-                        userData[sender.id].coins += args[2]*args[1];
+                        userData[sender.id].coins += args[2]*multiplier;
                         Save();
-                        await createEmbed(`DICE (${args[1]}x)`, '#7FFF00', '🎲🎲🎲\n🎲🎲🎲\n🎲🎲🎲\n\nYou won: `$' + args[2]*args[1] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                        await createEmbed(`DICE (${multiplier}x)`, '#7FFF00', '🎲🎲🎲\n🎲🎲🎲\n🎲🎲🎲\n\nYou won: `$' + args[2]*multiplier + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
                     } else if (flip >= 2) {
                         userData[sender.id].coins -= args[2];
                         Save();
-                        await createEmbed(`DICE (${args[1]}x)`, '#FF4500', '🎲🎲🔴\n🎲🔴🎲\n🔴🔴🎲\n\nYou lost: `$' + args[2] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
+                        await createEmbed(`DICE (${multiplier}x)`, '#FF4500', '🎲🎲🔴\n🎲🔴🎲\n🔴🔴🎲\n\nYou lost: `$' + args[2] + '`\n**Balance**: `$'+ userData[sender.id].coins +'`');
                     }
                 }
                 break;
