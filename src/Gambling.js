@@ -83,10 +83,11 @@ class Gambling {
             // BALANCE
 
             case `${prefix}balance`:case `${prefix}bal`:case `${prefix}coins`:
-                if (args[1] === 'reset') {
-                    userData[sender.id].coins = 200;
+                if (args[1] === 'reset' && args[2].startsWith('<@') && message.member.hasPermission("ADMINISTRATOR")) {
+                    let user = args[2].slice(3, -1);
+                    userData[user].coins = 200;
                     Save();
-                    await createEmbed(`${sender.username}'s BALANCE RESET`, '#FF7F50', 'New Balance: `$'+ userData[sender.id].coins +'`')
+                    await createEmbed(`USERS BALANCE RESET`, '#FF7F50', 'New Balance: `$200`')
                 } else {
                     await createEmbed(`${sender.username}'s BALANCE`, '#FF7F50', 'Coins: `$'+ userData[sender.id].coins +'`');
                 }
